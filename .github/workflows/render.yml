@@ -1,0 +1,24 @@
+name: render
+
+on: push
+
+jobs:
+  all:
+    name: Render cheat sheets
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      
+      - uses: r-lib/actions/setup-r@v1
+      
+      - uses: r-lib/actions/setup-pandoc@v1
+
+      - run: Rscript -e "install.packages('remotes')"
+      - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
+      - run: Rscript -e "rmarkdown::render('mlr3/mlr3cheatsheet.Rmd')"
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cheatsheet
+          path: mlr3/
