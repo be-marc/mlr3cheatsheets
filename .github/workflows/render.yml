@@ -15,6 +15,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - run: Rscript -e "install.packages('remotes')"
+      - run: Rscript -e "install.packages('mlr3')"
       - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
       - run: Rscript -e "rmarkdown::render('mlr3/mlr3cheatsheet.Rmd')"
       
