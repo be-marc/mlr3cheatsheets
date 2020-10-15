@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - run: which chrome
       - uses: actions/checkout@master
       
       - uses: r-lib/actions/setup-r@v1
