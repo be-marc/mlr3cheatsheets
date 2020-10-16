@@ -19,7 +19,6 @@ jobs:
       - run: Rscript -e "install.packages('mlr3')"
       - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
       - run: Rscript -e "cheatdown::print_pdf('mlr3/mlr3cheatsheet.Rmd', chrome = FALSE)"
-      - run: Rscript -e "Sys.sleep(20)"
       
       - uses: actions/upload-artifact@v2
         with:
