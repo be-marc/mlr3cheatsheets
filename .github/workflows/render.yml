@@ -13,11 +13,12 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
       
       - uses: r-lib/actions/setup-pandoc@v1
-
+      
+      - run: sudo apt-get install chromium-browser
       - run: Rscript -e "install.packages('remotes')"
       - run: Rscript -e "install.packages('mlr3')"
       - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
-      - run: Rscript -e "cheatdown::print_pdf('mlr3/mlr3cheatsheet.Rmd')"
+      - run: Rscript -e "cheatdown::print_pdf('mlr3/mlr3cheatsheet.Rmd', chrome = FALSE)"
       - run: Rscript -e "Sys.sleep(20)"
       
       - uses: actions/upload-artifact@v2
