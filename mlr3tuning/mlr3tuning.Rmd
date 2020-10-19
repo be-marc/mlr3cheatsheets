@@ -100,7 +100,7 @@ instance = TuningInstanceSingleCrit$new(
 ```
 Set `store_benchmark_result = TRUE` to store resamplings of evaluations and `store_models = TRUE` to store associated models.
 
-```{r, results='hide'}
+```{r, results='hide', class.source='example'}
 # optimize hyperpar of RBF SVM on logscale
 learner = lrn("classif.svm", kernel = "radial",
   type = "C-classification")
@@ -203,7 +203,7 @@ at$predict(task, row_ids)
 
 Resampling the `AutoTuner` results in nested resampling with an inner and outer loop.
 							
-```{r, results='hide'}
+```{r, results='hide', class.source='example'}
 resampling_inner = rsmp("holdout")
 
 at = AutoTuner$new(learner, resampling_inner, 
