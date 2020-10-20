@@ -16,7 +16,9 @@ jobs:
 
       - run: sudo apt-get install chromium-browser
       - run: Rscript -e "install.packages('remotes')"
-      - run: Rscript -e "install.packages('mlr3')"
+      - run: >
+          Rscript -e "install.packages('mlr3', 'mlr3tuning',
+          'mlr3fselect', 'mlr3pipelines')"
       - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
       - run: >
           Rscript -e "cheatdown::print_pdf('mlr3/mlr3.Rmd',
