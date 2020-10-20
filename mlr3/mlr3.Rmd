@@ -9,9 +9,9 @@ output:
   cheatdown::cheatdown_html
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include=FALSE}
 library(mlr3)
+library(data.table)
 ```
 
 ## Class Overview
@@ -167,7 +167,7 @@ learner$predict_type = "<type>"
 Changes/sets the output type of the prediction. For classification, `"response"` means class labels, `"prob"` means posterior probabilities.
 For regression, `"response"` means numeric response, `"se"` extracts the standard error.
 							
-```{r, eval=FALSE, class.source='example'}
+```{r, results='hide', class.source='example'}
 task = tsk("sonar")
 learner = lrn("classif.rpart")
 
@@ -184,19 +184,23 @@ prediction$score()
 
 ## Train & Predict
 
-```{r, eval=FALSE}
+```{r, include=FALSE}
+row_ids = 1:50
+```
+
+```{r, results='hide'}
 learner$train(task, row_ids)
 ```
 
 Train on (selected) observations.
 
-```{r, eval=FALSE}
+```{r, results='hide'}
 learner$model
 ```
 
 The resulting model is stored in the `$model` slot of the `learner`.
 
-```{r, eval=FALSE}
+```{r, results='hide'}
 prediction = learner$predict(task, row_ids)
 ```
 
@@ -216,7 +220,11 @@ Get measure by `.key` from `mlr_measures:
 
 Print `mlr_measures` for all measures.
 
-```{r, eval=FALSE}
+```{r, include=FALSE}
+measures = msrs(c("classif.ce", "classif.acc"))
+```
+
+```{r, results='hide'}
 prediction$score(measures)
 ```
 Calculate performance with one or more measures.
@@ -235,20 +243,24 @@ Creation: `resampling = rsmp(.key, ...)`
 * `subsampling` (`repeats`, `ratio`) Repeated holdouts.
 * `bootstrap` (`repeats`, `ratio`) Out-of-bag bootstrap.
 * Custom splits 
-```{r, eval=FALSE}
+```{r, results='hide'}
 resampling = rsmp("custom")
 resampling$instantiate(task, 
   train = list(c(1:10, 51:60, 101:110)), 
   test = list(c(11:20, 61:70, 111:120)))									
-```									
+```		
+
+```{r, include=FALSE}
+resampling = rsmp("cv")
+```
 		
-```{r, eval=FALSE}						
+```{r, results='hide'}					
 resampling$param_set
 ```
 
 Returns a description of parameter settings.
 
-```{r, eval=FALSE}						
+```{r, results='hide'}					
 resampling$param_set$values = list(folds = 10)
 ```							
 								
@@ -266,7 +278,7 @@ task$col_roles$group = "<column_name>"
 														
 Sets group variable.
 								
-```{r, eval=FALSE}						
+```{r, results='hide'}					
 resampling$instantiate(task)
 ```										
 							
@@ -276,27 +288,31 @@ Perform splitting and define index sets.
 								
 Train-Predict-Score a learner on each train/test set.
 								
-```{r, eval=FALSE}	
+```{r, results='hide'}
 rr = resample(task, learner, resampling)
 ```
 Returns a `ResampleResult` container object.
 
-```{r, eval=FALSE}	
+```{r, results='hide'}
 rr$score(measures)
 ```
 Returns a `data.table` of scores on test sets.
 
-```{r, eval=FALSE}	
+```{r, results='hide'}
 rr$aggregate(measures)
 ```
 Gets aggregated performance scores as vector.
 
-```{r, eval=FALSE}	
+```{r, include=FALSE}
+iters = 1
+```
+
+```{r, results='hide'}
 rr$filter(iters)
 ```
 Filters to specific iterations.
 								
-```{r, eval=FALSE, class.source='example'}
+```{r, eval = FALSE, class.source='example'}
 library(mlr3learners)
 task = tsk("pima")
 learner = lrn("classif.rpart", predict_type = "prob")
@@ -335,34 +351,50 @@ Results are stored as a `data.table`. `BenchmarkResult` contains a `ResampleResu
 ## Benchmark
 
 Compare learner(s) on task(s) with resampling(s).
+
+```{r, include=FALSE}
+tasks = tsk("pima")
+learners = lrns(c("classif.rpart", "classif.featureless"))
+resamplings = rsmp("holdout")
+```
 								
-```{r, eval=FALSE}	
+```{r, results='hide'}
 design = benchmark_grid(
   tasks, learners, resamplings)
 ```
 Creates a cross-join datatable with list-columns. Can also be set up manually for full control.
 								
-```{r, eval=FALSE}	
+```{r, results='hide'}	
 bmr = benchmark(design)
 ```
 Returns a `BenckmarkResult` container.
 								
-```{r, eval=FALSE}	
+```{r, results='hide'}	
 bmr$aggregate(measures)
 ```
 `data.table` of `ResampleResult` with scores.
 								
-```{r, eval=FALSE}	
+```{r, results='hide'}
 bmr$score(measures)
 ```
 Data `data.table` of resampling iterations with scores.
 								
-```{r, eval=FALSE}	
+```{r, include=FALSE}
+task_ids = "pima"
+learner_ids = "classif.rpart"
+resampling_ids = "holdout"
+```
+
+```{r, results='hide'}	
 bmr$filter(task_ids, learner_ids, resampling_ids)
 ```
 Filter by task, learner and resampling.
-								
-```{r, eval=FALSE}
+
+```{r, include=FALSE}
+bmr1 = bmr
+```
+
+```{r, results='hide'}
 bmr$combine(bmr)
 c(bmr, bmr1) # alternative S3 method
 ```
@@ -383,7 +415,7 @@ Parallelization is automatically applied to all levels (resampling, tuning and F
 								
 `lgr` is used for logging and progress output.
 								
-```{r, eval=FALSE}
+```{r, results='hide'}
 getOption("lgr.log_levels")
 ## > fatal error  warn  info debug trace 
 ## >  100   200   300   400   500   600 
@@ -413,13 +445,13 @@ Creation: `mlr3viz::autoplot(object, type)}
 
 Packages `evaluate` and `callr` can be used to encapsulate execution of `$train()` and `$predict()` to prevent stops in case of errors - useful for larger experiments. `callr` isolates the execution in a separate R sessions, guarding against segfaults.
 
-```{r, eval=FALSE}
+```{r, results='hide'}
 learner$encapsulate = c(
  train = "evaluate", 
  predict = "callr")
 ```
 								
-```{r, eval=FALSE}
+```{r, results='hide'}
 learner$errors
 ```
 Returns the log of recorded errors.
