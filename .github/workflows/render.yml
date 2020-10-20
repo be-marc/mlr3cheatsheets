@@ -18,7 +18,7 @@ jobs:
       - run: Rscript -e "install.packages('remotes')"
       - run: >
           Rscript -e "install.packages(c('mlr3', 'mlr3tuning',
-          'mlr3fselect', 'mlr3pipelines', 'mlr3learners'))"
+          'mlr3fselect', 'mlr3pipelines', 'mlr3learners', 'e1071'))"
       - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
       - run: >
           Rscript -e "cheatdown::print_pdf('mlr3/mlr3.Rmd',
