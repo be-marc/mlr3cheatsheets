@@ -19,11 +19,24 @@ jobs:
       - run: Rscript -e "install.packages('mlr3')"
       - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
       - run: >
-          Rscript -e "cheatdown::print_pdf('mlr3/mlr3cheatsheet.Rmd',
-          chrome = FALSE);
-          cheatdown::print_pdf('mlr3/mlr3cheatsheet.Rmd', chrome = FALSE)"
+          Rscript -e "cheatdown::print_pdf('mlr3/mlr3.Rmd',
+          'pdf/mlr3.pdf', chrome = FALSE)"
+      - run: >
+          Rscript -e "cheatdown::print_pdf('mlr3tuning/mlr3tuning.Rmd',
+          'pdf/mlr3tuning.pdf', chrome = FALSE)"
+      - run: >
+          Rscript -e "cheatdown::print_pdf('mlr3fselect/mlr3fselect.Rmd',
+          'pdf/mlr3fselect.pdf', chrome = FALSE)"
+      - run: >
+          Rscript -e "cheatdown::print_pdf('mlr3pipelines/mlr3pipelines.Rmd',
+          'pdf/mlr3pipelines.pdf', chrome = FALSE)"
 
       - uses: actions/upload-artifact@v2
         with:
           name: cheatsheet
-          path: pdf/
+          path: |
+            pdf/
+            mlr3/
+            mlr3tuning/
+            mlr3fselect/
+            mlr3pipelines/
