@@ -14,27 +14,35 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-      - run: sudo apt-get install chromium-browser
-      - run: sudo apt install libcurl4-openssl-dev
-      - run: Rscript -e "install.packages('remotes')"
-      - run: >
-          Rscript -e "install.packages(c('mlr3', 'mlr3tuning',
-          'mlr3fselect', 'mlr3pipelines', 'mlr3learners', 'e1071'))"
-      - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
-      - run: >
-          Rscript -e "cheatdown::print_pdf('mlr3/mlr3.Rmd',
-          'pdf/mlr3.pdf')"
-      - run: >
-          Rscript -e "cheatdown::print_pdf('mlr3tuning/mlr3tuning.Rmd',
-          'pdf/mlr3tuning.pdf')"
-      - run: >
-          Rscript -e "cheatdown::print_pdf('mlr3fselect/mlr3fselect.Rmd',
-          'pdf/mlr3fselect.pdf')"
-      - run: >
-          Rscript -e "cheatdown::print_pdf('mlr3pipelines/mlr3pipelines.Rmd',
-          'pdf/mlr3pipelines.pdf')"
+      - name: Install curl
+        run: sudo apt install libcurl4-openssl-dev
 
-      - uses: actions/upload-artifact@v2
+      - name: Install dependencies
+        run: |
+          Rscript -e "install.packages('remotes')"
+          Rscript -e "install.packages(c('mlr3', 'mlr3tuning', 'mlr3fselect', 'mlr3pipelines', 'mlr3learners', 'e1071'))"
+          Rscript -e "remotes::install_github('be-marc/cheatdown')"
+
+      - name: Render cheat sheets
+        run: |
+          Rscript -e "cheatdown::print_pdf('mlr3/mlr3.Rmd', 'pdf/mlr3.pdf')"
+          Rscript -e "cheatdown::print_pdf('mlr3tuning/mlr3tuning.Rmd', 'pdf/mlr3tuning.pdf')"
+          Rscript -e "cheatdown::print_pdf('mlr3fselect/mlr3fselect.Rmd', 'pdf/mlr3fselect.pdf')"
+          Rscript -e "cheatdown::print_pdf('mlr3pipelines/mlr3pipelines.Rmd', 'pdf/mlr3pipelines.pdf')"
+
+      - name: Deploy pdfs
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add pdf/mlr3.pdf
+          git add pdf/mlr3tuning.pdf
+          git add pdf/mlr3fselect.pdf
+          git add pdf/mlr3pipelines.pdf
+          git commit -m "Deploy"
+          git push
+
+      - name: Upload actifacts
+        uses: actions/upload-artifact@v2
         with:
           name: cheatsheet
           path: |
