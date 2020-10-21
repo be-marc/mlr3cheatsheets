@@ -34,16 +34,13 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Deploy pdfs
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add pdf/mlr3.pdf
-          git add pdf/mlr3tuning.pdf
-          git add pdf/mlr3fselect.pdf
-          git add pdf/mlr3pipelines.pdf
-          git commit -m "Deploy"
-          git push
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: pdf
+          CLEAN: false
 
       - name: Upload actifacts
         uses: actions/upload-artifact@v2
