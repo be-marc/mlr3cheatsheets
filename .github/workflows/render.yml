@@ -22,16 +22,16 @@ jobs:
       - run: Rscript -e "remotes::install_github('be-marc/cheatdown')"
       - run: >
           Rscript -e "cheatdown::print_pdf('mlr3/mlr3.Rmd',
-          'pdf/mlr3.pdf', chrome = FALSE)"
+          'pdf/mlr3.pdf')"
       - run: >
           Rscript -e "cheatdown::print_pdf('mlr3tuning/mlr3tuning.Rmd',
-          'pdf/mlr3tuning.pdf', chrome = FALSE)"
+          'pdf/mlr3tuning.pdf')"
       - run: >
           Rscript -e "cheatdown::print_pdf('mlr3fselect/mlr3fselect.Rmd',
-          'pdf/mlr3fselect.pdf', chrome = FALSE)"
+          'pdf/mlr3fselect.pdf')"
       - run: >
           Rscript -e "cheatdown::print_pdf('mlr3pipelines/mlr3pipelines.Rmd',
-          'pdf/mlr3pipelines.pdf', chrome = FALSE)"
+          'pdf/mlr3pipelines.pdf')"
 
       - uses: actions/upload-artifact@v2
         with:
