@@ -15,6 +15,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - run: sudo apt-get install chromium-browser
+      - run: sudo apt install libcurl4-openssl-dev
       - run: Rscript -e "install.packages('remotes')"
       - run: >
           Rscript -e "install.packages(c('mlr3', 'mlr3tuning',
