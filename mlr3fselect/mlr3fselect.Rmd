@@ -143,7 +143,7 @@ After completion the learner is trained with the "optimal" feature subset on the
 row_ids = 1:50
 ```
 
-```{r, results='hide'}
+```{r, eval = FALSE}
 at$train(task)
 at$predict(task, row_ids)
 ```
